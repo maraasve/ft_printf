@@ -3,17 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:45 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/04 17:38:19 by marieke          ###   ########.fr       */
+/*   Updated: 2023/11/06 17:43:50 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-#include <stdarg.h>
+#  define FLAGS "-0. #+"
+#  define SPECIFIERS "cspdiuxX"
+
+# include <stdarg.h>
 
 typedef struct s_flags
 {
@@ -26,10 +29,15 @@ typedef struct s_flags
 	int	total_len;
 	int	space;
 	int	hash;
-} t_flags;
+}	t_flags;
 
-
+typedef struct s_buffer
+{
+	char	*buffer;
+	int		size;
+}	t_buffer;
 
 int	ft_printf(const char *string, ...);
+void	set_flags_to_zero(t_flags *tabs);
 
 #endif
