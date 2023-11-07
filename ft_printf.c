@@ -6,7 +6,7 @@
 /*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:09 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/06 18:07:39 by maraasve         ###   ########.fr       */
+/*   Updated: 2023/11/07 17:46:33 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,42 @@
 
 int	write_to_buffer(const char *string, size_t len, char *buffer)
 {
-	
+	write(1, string, len);
+	return 1;
 }
 
-int	check_spec_and_flags(char *string, va_list args, t_flags *tabs, char *buffer)
+int	convert_specifiers(char c, char *buffer)
+{
+	if (c == '%')
+		write_to_buffer ("%", 1, buffer);
+	return 1;
+}
+
+int save_flags_to_tabs(char *string, va_list args, t_flags *tabs, char *buffer)
 {
 	int i;
 
 	set_flags_to_zero(tabs);
-	if (string[1] == '%')
-	{
-		write_to_buffer(string, 1, buffer);
-		return (2);
-	}
+	tabs->width = get_width(string);
+	tabs->precision = get_width(string);
 	i = 0;
-	//CHECK width
-	//CHECK zero
-	while (!ft_strchr(string[i], SPECIFIERS))
+	while(ft_strchr(FLAGS, string[i]) || ft_isdigit(string[i]))
 	{
-		if(ft_strchr(string[i], FLAGS))
-			add_flag_to_tabs(tabs, string[i]);
+		if (string[i] == '#')
+			tabs->hash = 1;
+		if (string[i] == '0')
+			tabs->zero_pad = 1;
+		if (string[i] == '-')
+			tabs->left_align = 1;
+		if (string[i] == '+')
+			tabs->sign = 1;
+		if (string[i] == ' ')
+			tabs->space = 1;
+		if (string[i] == '*')
+			tabs->asterisk = 1;
 		i++;
 	}
-	parse_specifier(string[i])
+	return (i);
 }
 
 int	read_string(const char *string, va_list args, t_flags *tabs, char *buffer)
@@ -51,14 +64,20 @@ int	read_string(const char *string, va_list args, t_flags *tabs, char *buffer)
 	{
 		if (string[i] == '%')
 		{
-			if (!write_to_buffer(&string[start], (i - 1 - start), buffer))
-				return (-1);
-			i += check_spec_and_flags(&string[i], args, tabs, buffer);
+			if (!write_to_buffer(&string[start], (i - start - 1), buffer))
+				return (0);
+			i += save_flags_to_tabs((char *)&string[i], args, tabs, buffer);
+			if (!convert_specifiers(string[i], buffer))
+				return (0);
+			i++;
 			start = i;
 		}
 		else
 			i++;
 	}
+	if (!write_to_buffer(&string[start], (i - start), buffer))
+				return (0);
+	return (1);
 }
 
 int	ft_printf(const char *string, ...)
@@ -75,6 +94,15 @@ int	ft_printf(const char *string, ...)
 	tabs = (t_flags *)malloc(sizeof(t_flags));
 	if (!tabs)
 		return (-1);
-	len = read_string(string, args, tabs, buffer);
+	if (!read_string(string, args, tabs, buffer))
+		return (-1);
+	len = ft_strlen(buffer);
+	write(1, buffer, len);
+	free(buffer);
+	va_end(args);
 	return (len);
+}
+int main(void)
+{
+	ft_printf("hallo dit is een test %% dit is test 2");
 }
