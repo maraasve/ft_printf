@@ -6,7 +6,7 @@
 /*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:09 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/07 17:46:33 by maraasve         ###   ########.fr       */
+/*   Updated: 2023/11/07 18:08:40 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int	write_to_buffer(const char *string, size_t len, char *buffer)
 {
+	if (len == 0)
+		return (1);
 	write(1, string, len);
 	return 1;
 }
@@ -34,6 +36,8 @@ int save_flags_to_tabs(char *string, va_list args, t_flags *tabs, char *buffer)
 	tabs->width = get_width(string);
 	tabs->precision = get_width(string);
 	i = 0;
+	if (string[i] == '%')
+		i++;
 	while(ft_strchr(FLAGS, string[i]) || ft_isdigit(string[i]))
 	{
 		if (string[i] == '#')
@@ -64,7 +68,7 @@ int	read_string(const char *string, va_list args, t_flags *tabs, char *buffer)
 	{
 		if (string[i] == '%')
 		{
-			if (!write_to_buffer(&string[start], (i - start - 1), buffer))
+			if (!write_to_buffer(&string[start], (i - start), buffer))
 				return (0);
 			i += save_flags_to_tabs((char *)&string[i], args, tabs, buffer);
 			if (!convert_specifiers(string[i], buffer))

@@ -1,6 +1,6 @@
 NAME = libftprintf.a
 CC = cc
-CFLAGS =
+CFLAGS = -g
 AR = ar -rcs
 # Directories
 LIBFT_DIR = libft
@@ -34,7 +34,7 @@ $(LIBFT_NAME):
 	@$(MAKE) -C $(LIBFT_DIR)
 
 run: all
-	@cc $(NAME) && ./a.out
+	@cc -g $(NAME) && ./a.out
 
 clean:
 	@rm -rf $(PRINTF_OBJ)
