@@ -3,29 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:09 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/07 18:08:40 by maraasve         ###   ########.fr       */
+/*   Updated: 2023/11/09 17:01:43 by marieke          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 #include "libft/libft.h"
+#include <stdio.h>
 
 int	write_to_buffer(const char *string, size_t len, char *buffer)
 {
 	if (len == 0)
 		return (1);
 	write(1, string, len);
-	return 1;
+	return (1);
 }
 
-int	convert_specifiers(char c, char *buffer)
+int	convert_specifiers(char c, char *buffer, va_list args, t_flags *tabs)
 {
 	if (c == '%')
-		write_to_buffer ("%", 1, buffer);
-	return 1;
+	{
+		if(!write_to_buffer("%", 1, buffer))
+			return (0);
+	}
+	else if (c == 'c')
+	{
+		if (!write_to_buffer(get_char(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}
+/* 	else if (c == 's')
+	{
+		if (!write_to_buffer(get_string(va_arg(args, char *), tabs), tabs->len, buffer))
+			return (0);
+	}
+	else if (c == 'd' || c == 'i')
+	{
+		if (!write_to_buffer(get_int(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}
+	else if (c == 'x')
+	{
+		if (!write_to_buffer(get_hex_low(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}
+	else if (c == 'X')
+	{
+		if (!write_to_buffer(get_hex_up(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}
+	else if (c == 'p')
+	{
+		if (!write_to_buffer(get_ptr(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}
+	else if (c == 'u')
+	{
+		if (!write_to_buffer(get_u_int(va_arg(args, int), tabs), tabs->len, buffer))
+			return (0);
+	}*/
+	return (1); 
 }
 
 int save_flags_to_tabs(char *string, va_list args, t_flags *tabs, char *buffer)
@@ -34,7 +73,7 @@ int save_flags_to_tabs(char *string, va_list args, t_flags *tabs, char *buffer)
 
 	set_flags_to_zero(tabs);
 	tabs->width = get_width(string);
-	tabs->precision = get_width(string);
+	tabs->precision = get_precision(string);
 	i = 0;
 	if (string[i] == '%')
 		i++;
@@ -71,7 +110,7 @@ int	read_string(const char *string, va_list args, t_flags *tabs, char *buffer)
 			if (!write_to_buffer(&string[start], (i - start), buffer))
 				return (0);
 			i += save_flags_to_tabs((char *)&string[i], args, tabs, buffer);
-			if (!convert_specifiers(string[i], buffer))
+			if (!convert_specifiers(string[i], buffer, args, tabs))
 				return (0);
 			i++;
 			start = i;
@@ -108,5 +147,6 @@ int	ft_printf(const char *string, ...)
 }
 int main(void)
 {
-	ft_printf("hallo dit is een test %% dit is test 2");
+	char c = 'a';
+	ft_printf("--%5c--", c);
 }

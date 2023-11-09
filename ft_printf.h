@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:45 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/07 17:39:03 by maraasve         ###   ########.fr       */
+/*   Updated: 2023/11/09 16:57:55 by marieke          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #  define SPECIFIERS "cspdiuxX"
 
 # include <stdarg.h>
+# include <stdlib.h>
 
 typedef struct s_flags
 {
@@ -28,7 +29,7 @@ typedef struct s_flags
 	int	space;
 	int	hash;
 	int	asterisk;
-	int	total_len;
+	int	len;
 }	t_flags;
 
 typedef struct s_buffer
@@ -42,4 +43,5 @@ void	set_flags_to_zero(t_flags *tabs);
 int		ft_strlen_until_next_spec(char *s);
 int		get_width(char *string);
 int		get_precision(char *string);
+char	*get_char(char c, t_flags *tabs);
 #endif

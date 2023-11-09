@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 13:46:01 by maraasve          #+#    #+#             */
-/*   Updated: 2023/11/07 18:07:33 by maraasve         ###   ########.fr       */
+/*   Updated: 2023/11/08 11:57:44 by marieke          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_flags_to_zero(t_flags *tabs)
 	tabs->space = 0;
 	tabs->hash = 0;
 	tabs->asterisk = 0;
-	tabs->total_len = 0;
+	tabs->len = 0;
 }
 
 int	ft_strlen_until_next_spec(char *s)
@@ -49,6 +49,8 @@ int	get_width(char *string)
 
 	i = 0;
 	width = 0;
+	if (string[i] == '%')
+		i++;
 	while (ft_strchr(FLAGS, string[i]))
 	{
 		i++;
@@ -68,8 +70,12 @@ int	get_precision(char *string)
 
 	i = 0;
 	precision = 0;
+	if (string[i] == '%')
+		i++;
 	while (ft_strchr(FLAGS, string[i]) || ft_isdigit(string[i]))
 	{
+		if (string[i] == '.')
+			break;
 		i++;
 	}
 	if (string[i] != '.')
