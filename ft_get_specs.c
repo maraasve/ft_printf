@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_get_specs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/08 12:30:31 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/09 23:41:10 by marieke          ###   ########.fr       */
+/*   Updated: 2023/11/10 18:00:07 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,14 @@ char	*get_string(char *old_str, t_flags *tabs)
 	int		strlen;
 	int		i;
 
+	if (!old_str)
+	{
+		new_str = (char *)malloc(sizeof(char) * 7);
+		if (!new_str)
+			return (NULL);
+		ft_strlcpy (new_str, "(null)", 7);
+		return (new_str);
+	}
 	strlen = ft_strlen(old_str);
 	if (tabs->width < strlen && tabs->precision > strlen)
 	{
@@ -65,6 +73,7 @@ char	*get_string(char *old_str, t_flags *tabs)
 	ft_strlcpy(&new_str[i], old_str, strlen + 1);
 	if (tabs->width > strlen && tabs->left_align)
 		i += put_spaces(&new_str[strlen], i, total_len - strlen);
+	new_str[i] = '\0';
 	tabs->len = total_len;
 	return (new_str); 
 }
@@ -76,15 +85,45 @@ char	*get_int(int num, t_flags *tabs)
 	int		total_len;
 	int		i;
 
-	num_len = ft_countdigits(ft_abs(num));
-	if (tabs->precision < num_len)
-		num_len = tabs->precision;
+	if (num == 0)
+		num_len = 1;
+	else
+		num_len = ft_countdigits(ft_abs(num));
 	if (num < 0 || tabs->sign || tabs->space)
 		num_len++;
-	if (tabs->width > num_len)
+	if (tabs->width > num_len && tabs->precision < tabs->width)
 		total_len = tabs->width;
-	else
-		total_len = num_len;
-	
-	
+	else if (tabs->precision > num_len && tabs->precision > tabs->width)
+	{
+		total_len = tabs->precision;
+		if (tabs->sign || tabs->space || num < 0)
+			total_len++;
+	}
+	s = (char *)malloc(sizeof(char) * (total_len + 1));
+	if (!s)
+		return (NULL);
+	i = 0;
+	if (tabs->width > num_len && tabs->width > tabs->precision && !tabs->zero_pad && !tabs->left_align)
+		i += put_spaces(s, i, tabs->width - ft_biggestnum(num_len, tabs->precision));
+	else if (tabs->width > num_len && tabs->width > tabs->precision && tabs->zero_pad && !tabs->left_align)
+		i += put_zeros(s, i, tabs->width - ft_biggestnum(num_len, tabs->precision));
+	if (tabs->precision > num_len)
+		i = put_zeros(s, i, total_len - num_len);
+	if (num > 0 && tabs->sign)
+	{
+		s[i] = '+';
+		i++;
+	}
+	else if (num > 0 && tabs->space)
+		i += put_spaces(s, i, i + 1);
+	else if (num < 0)
+	{
+		s[i] = '-';
+		i++;
+	}
+	i += ft_itoa_mod(&s[i], ft_abs(num));
+	if (tabs->width > ft_biggestnum(num_len, tabs->precision) && tabs->left_align)
+		i += put_spaces(s, i, total_len);
+	tabs->len = total_len;
+	return (s);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:45 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/09 18:05:47 by marieke          ###   ########.fr       */
+/*   Updated: 2023/11/10 16:33:03 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int		get_width(char *string);
 int		get_precision(char *string);
 char	*get_char(char c, t_flags *tabs);
 char	*get_string(char *old_str, t_flags *tabs);
+char	*get_int(int num, t_flags *tabs);
 int		put_spaces(char *str, int start, int end);
 int		put_zeros(char *str, int start, int end);
+size_t	ft_itoa_mod(char	*str, size_t num);
 #endif

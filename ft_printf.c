@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
+/*   By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:09 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/09 18:18:44 by marieke          ###   ########.fr       */
+/*   Updated: 2023/11/10 17:49:34 by maraasve         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ int	convert_specifiers(char c, char *buffer, va_list args, t_flags *tabs)
 		if (!write_to_buffer(get_string(va_arg(args, char *), tabs), tabs->len, buffer))
 			return (0);
 	}
-/*	else if (c == 'd' || c == 'i')
+	else if (c == 'd' || c == 'i')
 	{
 		if (!write_to_buffer(get_int(va_arg(args, int), tabs), tabs->len, buffer))
 			return (0);
 	}
-	else if (c == 'x')
+/*	else if (c == 'x')
 	{
 		if (!write_to_buffer(get_hex_low(va_arg(args, int), tabs), tabs->len, buffer))
 			return (0);
@@ -83,7 +83,7 @@ int save_flags_to_tabs(char *string, va_list args, t_flags *tabs, char *buffer)
 	{
 		if (string[i] == '#')
 			tabs->hash = 1;
-		if (string[i] == '0')
+		if (string[1] == '0')
 			tabs->zero_pad = 1;
 		if (string[i] == '-')
 			tabs->left_align = 1;
@@ -149,5 +149,5 @@ int	ft_printf(const char *string, ...)
 }
 int main(void)
 {
-	ft_printf("--%s--", "123456789");
+	ft_printf("--%10.5i--", 0);
 }
