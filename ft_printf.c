@@ -6,7 +6,7 @@
 /*   By: marieke <marieke@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/02 12:26:09 by marieke           #+#    #+#             */
-/*   Updated: 2023/11/09 17:01:43 by marieke          ###   ########.fr       */
+/*   Updated: 2023/11/09 18:18:44 by marieke          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 
 int	write_to_buffer(const char *string, size_t len, char *buffer)
 {
+	if (!string)
+		return (0);
 	if (len == 0)
 		return (1);
 	write(1, string, len);
@@ -34,12 +36,12 @@ int	convert_specifiers(char c, char *buffer, va_list args, t_flags *tabs)
 		if (!write_to_buffer(get_char(va_arg(args, int), tabs), tabs->len, buffer))
 			return (0);
 	}
-/* 	else if (c == 's')
+ 	else if (c == 's')
 	{
 		if (!write_to_buffer(get_string(va_arg(args, char *), tabs), tabs->len, buffer))
 			return (0);
 	}
-	else if (c == 'd' || c == 'i')
+/*	else if (c == 'd' || c == 'i')
 	{
 		if (!write_to_buffer(get_int(va_arg(args, int), tabs), tabs->len, buffer))
 			return (0);
@@ -147,6 +149,5 @@ int	ft_printf(const char *string, ...)
 }
 int main(void)
 {
-	char c = 'a';
-	ft_printf("--%5c--", c);
+	ft_printf("--%s--", "123456789");
 }
