@@ -3,40 +3,53 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: maraasve <maraasve@student.42.fr>          +#+  +:+       +#+         #
+#    By: marieke <marieke@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/30 12:58:17 by maraasve          #+#    #+#              #
-#    Updated: 2023/11/30 13:54:03 by maraasve         ###   ########.fr        #
+#    Updated: 2025/07/05 11:30:13 by marieke          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -isystem $(INCL_DIR) -isystem $(LIBFT_INCL_DIR)
 AR = ar -rcs
-LIBFT_DIR = ./libft
+RM = rm -rf
+
+LIBFT_DIR = libft
+LIBFT_INCL_DIR = libft/incl
 LIBFT_NAME = $(LIBFT_DIR)/libft.a
 
-SRC = ft_printf.c \
-			ft_printf_utils.c \
-			ft_printf_utils2.c \
+INCL_DIR = incl
+SRC_DIR = src
+BUILD_DIR = build
+OBJ_DIR = build/obj
 
-OBJ = $(SRC:%.c=%.o)
+SRC =	ft_printf.c \
+		output_char.c \
+		output_num.c
+
+SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
+
+OBJ = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 all: $(NAME)
 
 $(NAME): $(LIBFT_NAME) $(OBJ)
 	@$(AR) $@ $(OBJ)
 
-%.o:%.c
+$(OBJ_DIR)/%.o:$(SRC_DIR)/%.c | $(OBJ_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 $(LIBFT_NAME):
 	@cd $(LIBFT_DIR) && $(MAKE)
 	@cp $(LIBFT_NAME) $(NAME)
 
 clean:
-	@$(RM) $(OBJ)
+	@$(RM) $(BUILD_DIR)
 	@cd $(LIBFT_DIR) && $(MAKE) clean
 
 fclean: clean
@@ -46,6 +59,3 @@ fclean: clean
 re: clean all
 
 .PHONY: all clean fclean re
-
-
-
